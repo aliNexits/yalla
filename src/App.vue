@@ -40,7 +40,7 @@
     <div
       style="border-radius: 30px"
       id="imageCarousel"
-      class="carousel slide mt-5"
+      class="carousel slide mt-2"
       data-ride="carousel"
       data-interval="3000"
     >
