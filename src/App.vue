@@ -35,7 +35,10 @@
     ></flip-countdown>
       </div>
     </div>
-
+ <div>
+          <h2>
+            {{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds
+          </h2>
     <!-- Image Carousel -->
     <div
       style="border-radius: 30px"
