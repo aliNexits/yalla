@@ -2,9 +2,7 @@
   <div id="app" class="container mt-2">
     <!-- Countdown Card -->
     <div class="card text-center">
-      <div
-        class="card-header d-flex align-items-center justify-content-between"
-      >
+      <div class="card-header d-flex align-items-center justify-content-between">
         <img
           src="../images/avatar.jpg"
           class="rounded-circle"
@@ -28,7 +26,7 @@
           Time passed since our special day! <strong>06/10/2024</strong>
         </h5>
 
-        <!-- vue2-flip-countdown component used for count-up -->
+        <!-- Count-up effect using flip-countdown -->
         <flip-countdown
           :deadline="deadline"
           :showDays="true"
@@ -50,38 +48,38 @@ export default {
   },
   data() {
     return {
-      // Start date (October 6, 2024)
-      startDate: moment("2024-10-06").valueOf(), // Fixed start date in timestamp
-      deadline: moment().add(100, "years").valueOf(), // Fake future deadline (countdown will never reach this date)
-      elapsedTime: 0, // Time elapsed in seconds
+      // Fixed start date (October 6, 2024)
+      startDate: moment("2024-10-06").valueOf(),
+      // Initial deadline set to a far future date
+      deadline: moment().add(100, "years").valueOf(),
     };
   },
   mounted() {
-    // Start interval to update elapsed time every second
+    // Start updating the deadline every second
     this.timer = setInterval(() => {
-      this.updateElapsedTime();
+      this.updateDeadline();
     }, 1000);
   },
   beforeDestroy() {
     clearInterval(this.timer); // Clear the timer when the component is destroyed
   },
   methods: {
-    updateElapsedTime() {
+    updateDeadline() {
       const now = moment().valueOf(); // Get the current timestamp
-      const diffInMilliseconds = now - this.startDate; // Calculate difference since start date
+      const elapsedSeconds = Math.floor((now - this.startDate) / 1000); // Calculate elapsed time in seconds
 
-      // Convert milliseconds to seconds
-      this.elapsedTime = Math.floor(diffInMilliseconds / 1000);
-
-      // Update deadline to make it look like a count-up by shifting the deadline dynamically
-      this.deadline = moment().add(this.elapsedTime, "seconds").valueOf();
+      // Update the deadline to reflect the elapsed time
+      this.deadline = moment().add(100, "years").add(elapsedSeconds, "seconds").valueOf();
     },
     timeElapsedHandler() {
-      // Handle the time elapsed event if needed
+      // Optional: Handle any event when time is being tracked
     },
   },
 };
 </script>
+
+
+
 
 
 
