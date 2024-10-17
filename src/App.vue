@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="container mt-2">
-    <!-- Countdown Card -->
+    <!-- Count-Up Card -->
     <div class="card text-center">
       <div class="card-header d-flex align-items-center justify-content-between">
         <img
@@ -26,57 +26,62 @@
           Time passed since our special day! <strong>06/10/2024</strong>
         </h5>
 
-        <!-- Count-up effect using flip-countdown -->
-        <flip-countdown
-          :deadline="deadline"
-          :showDays="true"
-          @timeElapsed="timeElapsedHandler"
-        ></flip-countdown>
+        <!-- Timer Component to display count-up -->
+        <Timer :years="time.years" :days="time.days" :hours="time.hours" :minutes="time.minutes" :seconds="time.seconds" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import FlipCountdown from "vue2-flip-countdown";
 import moment from "moment";
+import Timer from "./Timer.vue"; // Import the Timer component
 
 export default {
   name: "app",
   components: {
-    FlipCountdown,
+    Timer, // Register the Timer component
   },
   data() {
     return {
       // Fixed start date (October 6, 2024)
       startDate: moment("2024-10-06").valueOf(),
-      // Initial deadline set to a far future date
-      deadline: moment().add(100, "years").valueOf(),
+      elapsedTime: 0, // Time elapsed in seconds
     };
   },
+  computed: {
+    time() {
+      const now = moment();
+      const duration = moment.duration(now.diff(this.startDate)); // Get the duration
+
+      return {
+        years: Math.floor(duration.asYears()), // Calculate years
+        days: Math.floor(duration.asDays()) % 365, // Calculate remaining days
+        hours: now.hours(), // Current hour
+        minutes: now.minutes(), // Current minute
+        seconds: now.seconds(), // Current second
+      };
+    },
+  },
   mounted() {
-    // Start updating the deadline every second
+    // Start updating the elapsed time every second
     this.timer = setInterval(() => {
-      this.updateDeadline();
+      this.updateElapsedTime();
     }, 1000);
   },
   beforeDestroy() {
     clearInterval(this.timer); // Clear the timer when the component is destroyed
   },
   methods: {
-    updateDeadline() {
-      const now = moment().valueOf(); // Get the current timestamp
-      const elapsedSeconds = Math.floor((now - this.startDate) / 1000); // Calculate elapsed time in seconds
-
-      // Update the deadline to reflect the elapsed time
-      this.deadline = moment().add(100, "years").add(elapsedSeconds, "seconds").valueOf();
-    },
-    timeElapsedHandler() {
-      // Optional: Handle any event when time is being tracked
+    updateElapsedTime() {
+      // No longer needed since we use the computed property
     },
   },
 };
 </script>
+
+
+
 
 
 
