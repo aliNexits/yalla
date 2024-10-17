@@ -29,10 +29,10 @@
         </h5>
 
         <flip-countdown
-          :deadline="deadline1"
-          :showDays="true"
-          @timeElapsed="timeElapsedHandler"
-        ></flip-countdown>
+      :startTime="startTime"
+      :showDays="true"
+      @timeElapsed="timeElapsedHandler"
+    ></flip-countdown>
       </div>
     </div>
 
@@ -120,8 +120,6 @@
 import FlipCountdown from "vue2-flip-countdown";
 import moment from "moment";
 
-const fmt = "YYYY-MM-DD HH:mm:ss";
-
 export default {
   name: "app",
   components: {
@@ -129,25 +127,29 @@ export default {
   },
   data() {
     return {
-      // Set deadline1ts to the timestamp of 06/10/2024
-      deadline1ts: moment("2024-10-06").valueOf(), // Using moment to create a timestamp for October 6, 2024
-      deadline2: moment().add(30, "s").format(fmt),
-      deadline3: moment().add(1000, "d").add(10, "s").format(fmt),
-      deadline4: moment().add(2, "h").format(fmt),
-      deadline5: moment().add(24, "h").format(fmt),
+      // Set startDayTs to the timestamp of October 6, 2024
+      startDayTs: moment("2024-10-06").valueOf(), // Fixed start date
+      currentTimestamp: moment().valueOf(), // Current timestamp
     };
   },
   computed: {
-    deadline1: function () {
-      return moment(this.deadline1ts).format(fmt); // Formats the timestamp into the "YYYY-MM-DD HH:mm:ss" format
+    startTime: function () {
+      const diff = this.currentTimestamp - this.startDayTs; // Time difference in milliseconds
+      return moment.utc(diff).format("YYYY-MM-DD HH:mm:ss"); // Convert difference to readable format
     },
+  },
+  mounted() {
+    // Update the time every second
+    this.timer = setInterval(() => {
+      this.currentTimestamp = moment().valueOf(); // Update current time
+    }, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.timer); // Clear the timer when the component is destroyed
   },
   methods: {
     timeElapsedHandler: function () {
-      // Handle time elapsed event
-    },
-    extendDeadline() {
-      this.deadline1ts += 10000; // Example function to extend the deadline by 10 seconds
+      // Handle any event when time is being tracked
     },
   },
 };
